@@ -5,7 +5,7 @@ import uuid
 import os
 
 class LinkCheckerSpider(scrapy.Spider):
-    name = 'aliexpress_tablets'
+    name = 'test'
     allowed_domains = ['caniuse.com']
     start_urls = ['https://caniuse.com']
 
