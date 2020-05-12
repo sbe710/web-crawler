@@ -64,9 +64,13 @@ for element in soup.find_all('div'):
     # print(element.text)
     textArray.append(element.text)
 
-text_file = open(os.path.join(save_path, "sample.txt"), "w")
-n = text_file.write("".join(textArray).strip().replace("\t", "").replace("\n", ""))
+text_file = open(os.path.join(save_path, "parsed text.txt"), "w")
+text_file.write("".join(textArray).strip().replace("\t", "").replace("\n", ""))
 text_file.close()
+
+html_file = open(os.path.join(save_path, "parsed html.txt"), "w")
+html_file.write(html_page)
+html_file.close()
 
 images = soup.findAll('img')
 for image in images:
