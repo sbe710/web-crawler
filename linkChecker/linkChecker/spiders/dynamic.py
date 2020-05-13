@@ -15,7 +15,7 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ), os.pardir, 
 
 dateTimeObj = datetime.now()
 currentDate = str(dateTimeObj.day) + "." + str(dateTimeObj.month) + "." + str(dateTimeObj.year)
-currentTime = str(dateTimeObj.hour) + ":" + str(dateTimeObj.minute)
+currentTime = str(dateTimeObj.hour) + "." + str(dateTimeObj.minute)
 
 # URL to specific page
 URL = "https://pikabu.ru/"
@@ -25,11 +25,18 @@ domain = "https://pikabu.ru/"
 parsed_uri = urlparse(URL)
 domainName = '{uri.netloc}'.format(uri=parsed_uri)
 
-save_path = ROOT_DIR + "/output/" + domainName + " " + currentDate + " " + currentTime
+if os.name == "posix":
+    save_path = ROOT_DIR + "/output/" + domainName + " " + currentDate + " " + currentTime
+else: 
+    save_path = ROOT_DIR + "\output\\" + domainName + " " + currentDate + " " + currentTime
 
 # Create new folder
-if os.path.isdir(ROOT_DIR + "/output") is False:
-    os.mkdir(ROOT_DIR + "/output")
+if os.name == "posix":
+    if os.path.isdir(ROOT_DIR + "/output") is False:
+        os.mkdir(ROOT_DIR + "/output")
+else:
+    if os.path.isdir(ROOT_DIR + "\output") is False:
+        os.mkdir(ROOT_DIR + "\output")
 
 os.mkdir(save_path)
 
@@ -72,17 +79,21 @@ for element in soup.find_all('div'):
     # print(element.text)
     textArray.append(element.text)
 
-text_file = open(os.path.join(save_path, "parsed text.txt"), "w")
+text_file = open(os.path.join(save_path, "parsed text.txt"), "w", encoding='utf-8')
 text_file.write("".join(textArray).strip().replace("\t", "").replace("\n", ""))
 text_file.close()
+
 text_to_db("".join(textArray).strip().replace("\t", "").replace("\n", ""), save_path, cursor)
+
 conn.commit()
 conn.close()
-html_file = open(os.path.join(save_path, "parsed html.txt"), "w")
+
+html_file = open(os.path.join(save_path, "parsed html.txt"), "w", encoding='utf-8')
 html_file.write(html_page)
 html_file.close()
 
 images = soup.findAll('img')
+
 if os.path.isdir(save_path + "/images") is False:
     os.mkdir(save_path + "/images")
 for image in images:
@@ -102,8 +113,8 @@ for image in images:
         conn.close()
         handler.write(contentData)
 
-
 videos = soup.findAll('video')
+
 if os.path.isdir(save_path + "/videos") is False:
     os.mkdir(save_path + "/videos")
 for video in videos:
