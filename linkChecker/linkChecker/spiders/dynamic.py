@@ -11,7 +11,7 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname( __file__ ), os.pardir, 
 
 dateTimeObj = datetime.now()
 currentDate = str(dateTimeObj.day) + "." + str(dateTimeObj.month) + "." + str(dateTimeObj.year)
-currentTime = str(dateTimeObj.hour) + ":" + str(dateTimeObj.minute)
+currentTime = str(dateTimeObj.hour) + "." + str(dateTimeObj.minute)
 
 # URL to specific page
 URL = "https://pikabu.ru/"
@@ -21,11 +21,18 @@ domain = "https://pikabu.ru/"
 parsed_uri = urlparse(URL)
 domainName = '{uri.netloc}'.format(uri=parsed_uri)
 
+if os.name == "posix":
 save_path = ROOT_DIR + "/output/" + domainName + " " + currentDate + " " + currentTime
+else: 
+    save_path = ROOT_DIR + "\output\\" + domainName + " " + currentDate + " " + currentTime
 
 # Create new folder
+if os.name == "posix":
 if os.path.isdir(ROOT_DIR + "/output") is False:
     os.mkdir(ROOT_DIR + "/output")
+else:
+    if os.path.isdir(ROOT_DIR + "\output") is False:
+        os.mkdir(ROOT_DIR + "\output")
 
 os.mkdir(save_path)
 
@@ -53,7 +60,7 @@ while True:
 
 # And grab the page HTML source
 html_page = wd.page_source
-print(html_page)
+# print(html_page)
 wd.quit()
 
 soup = BeautifulSoup(html_page, 'html.parser')
@@ -81,7 +88,7 @@ for image in images:
     contentData = requests.get(image['src']).content
     unique_filename = str(uuid.uuid4().hex)
     completeName = os.path.join(save_path, unique_filename + file_extension)
-    with open(completeName, 'wb') as handler:
+    with open(completeName, 'wb', encoding='utf-8') as handler:
         handler.write(contentData)
 
 
@@ -94,5 +101,5 @@ for video in videos:
     contentData = requests.get(video['src']).content
     unique_filename = str(uuid.uuid4().hex)
     completeName = os.path.join(save_path, unique_filename + file_extension)
-    with open(completeName, 'wb') as handler:
+    with open(completeName, 'wb', encoding='utf-8') as handler:
         handler.write(contentData)
