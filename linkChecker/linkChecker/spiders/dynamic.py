@@ -71,11 +71,11 @@ for element in soup.find_all('div'):
     # print(element.text)
     textArray.append(element.text)
 
-text_file = open(os.path.join(save_path, "parsed text.txt"), "w")
+text_file = open(os.path.join(save_path, "parsed text.txt"), "w", encoding='utf-8')
 text_file.write("".join(textArray).strip().replace("\t", "").replace("\n", ""))
 text_file.close()
 
-html_file = open(os.path.join(save_path, "parsed html.txt"), "w")
+html_file = open(os.path.join(save_path, "parsed html.txt"), "w", encoding='utf-8')
 html_file.write(html_page)
 html_file.close()
 
@@ -88,7 +88,7 @@ for image in images:
     contentData = requests.get(image['src']).content
     unique_filename = str(uuid.uuid4().hex)
     completeName = os.path.join(save_path, unique_filename + file_extension)
-    with open(completeName, 'wb', encoding='utf-8') as handler:
+    with open(completeName, 'wb') as handler:
         handler.write(contentData)
 
 
@@ -101,5 +101,5 @@ for video in videos:
     contentData = requests.get(video['src']).content
     unique_filename = str(uuid.uuid4().hex)
     completeName = os.path.join(save_path, unique_filename + file_extension)
-    with open(completeName, 'wb', encoding='utf-8') as handler:
+    with open(completeName, 'wb') as handler:
         handler.write(contentData)
