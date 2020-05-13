@@ -32,10 +32,7 @@ def image_to_db(path, vsourse, cursor):
     cursor.execute("""create table if not exists images
                    (name, path, sourse)""")
     for files in os.listdir(path):
-        # print("files: ", files)
-        # print("path: ", path)
         image = [(str(files), str(os.path.abspath(path)), str(sourse))]
-        # print("image: ", image)
         cursor.executemany("INSERT INTO images VALUES (?,?,?)", image)
 
 
@@ -54,8 +51,6 @@ def text_to_db(text, sourse, cursor):
     cursor.execute("""create table if not exists textContent
                    (text, sourse)""")
     txt = [(str(text), str(os.path.abspath(sourse)))]
-    # print("txt: ", txt)
-    print("text: ", text)
     cursor.executemany("INSERT INTO textContent VALUES (?,?)", txt)
 
 

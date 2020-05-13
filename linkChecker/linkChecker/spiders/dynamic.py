@@ -94,8 +94,14 @@ html_file.close()
 
 images = soup.findAll('img')
 
+# Create new folder
+if os.name == "posix":
 if os.path.isdir(save_path + "/images") is False:
     os.mkdir(save_path + "/images")
+else:
+    if os.path.isdir(save_path + "\images") is False:
+        os.mkdir(save_path + "\images")
+
 for image in images:
     #print image source
     # print('Image:     ' + image['src'])
@@ -103,8 +109,10 @@ for image in images:
     # print("filename ", file_extension)
     contentData = requests.get(image['src']).content
     unique_filename = str(uuid.uuid4().hex)
+    if os.name == "posix":
     completeName = os.path.join(save_path + "/images/", unique_filename + file_extension)
-    print("completeName", completeName)
+    else:
+        completeName = os.path.join(save_path + "\\images\\", unique_filename + file_extension)
     with open(completeName, 'wb') as handler:
         conn = sqlite3.connect("SaTRdatabase.db")
         cursor = conn.cursor()
@@ -115,16 +123,25 @@ for image in images:
 
 videos = soup.findAll('video')
 
+# Create new folder
+if os.name == "posix":
 if os.path.isdir(save_path + "/videos") is False:
     os.mkdir(save_path + "/videos")
+else:
+    if os.path.isdir(save_path + "\\videos") is False:
+        os.mkdir(save_path + "\\videos")
+
 for video in videos:
     #print video source
-    print('Image:     ' + video['src'])
+    print('Video:     ' + video['src'])
     filename, file_extension = os.path.splitext(video['src'])
     print("filename ", file_extension)
     contentData = requests.get(video['src']).content
     unique_filename = str(uuid.uuid4().hex)
+    if os.name == "posix":
     completeName = os.path.join(save_path + "/videos/", unique_filename + file_extension)
+    else:
+        completeName = os.path.join(save_path + "\\videos\\", unique_filename + file_extension)
     with open(completeName, 'wb') as handler:
         conn = sqlite3.connect("SaTRdatabase.db")
         cursor = conn.cursor()
